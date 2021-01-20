@@ -1,14 +1,33 @@
 ﻿@model List<BlobSampleApp1.Models.ContainerInfoViewModel>
 
+@{ 
+    Layout = null;
+}
+
 <strong class="ml-2">Containers</strong>
 
-    @foreach (var container in Model)
-    {<div class="row">
-         <div class="col-6">
-             <label>@container.Name</label>
-         </div>
-         <div class="col-6">
-             <button id="@container.Name-container">x</button>
-         </div>
-    </div>        
-    }
+@foreach (var container in Model)
+{<div class="row">
+        <div class="col-6">
+            <label>@container.Name</label>
+        </div>
+        <div class="col-6">
+            <button id="container-@container.Name" class="btn-danger delete">x</button>
+        </div>
+    </div>
+}
+
+
+<script>
+    $('button.delete').click(function (e) {
+        var name = e.target.getAttribute("id").replace('container-','');
+        request = $.ajax({
+            url: "/Container/Delete/" + name,
+            type: "Delete"
+        });
+        request.done(function (response, textStatus, jqXHR) {
+            let fileContainer = $("#containerContainer");
+            fileContainer.html(response);
+        });
+    });
+</script>

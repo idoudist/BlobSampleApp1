@@ -35,5 +35,13 @@ namespace BlobSampleApp1.Controllers
             await _containerService.CreateContainer(container.Name);
             return RedirectToAction("Index");
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _containerService.DeleteContainerAsync(id);
+            List<ContainerInfoViewModel> containers = await _containerService.ContainerList();
+            return View("List", containers);
+        }
     }
 }

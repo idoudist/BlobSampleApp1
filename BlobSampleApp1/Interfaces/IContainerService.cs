@@ -11,5 +11,6 @@ namespace BlobSampleApp1.Interfaces
         Task<BlobContainerInfo> CreateContainer(string containerName);
         Task<List<ContainerInfoViewModel>> ContainerList();
         Task<List<SelectListItem>> ContainerSelectList();
+        Task DeleteContainerAsync(string containerName);
     }
 }
