@@ -1,0 +1,16 @@
+﻿@model List<BlobSampleApp1.Models.FileResponseViewModel>
+
+
+<div class="row col-12 person-row mt-4">
+    <div class="col-3 col-sm-3 col-md-3 border-bottom"><strong>File Name</strong></div>
+    <div class="col-3 col-sm-3 col-md-3 border-bottom"><strong>Container</strong></div>
+    <div class="col-3 col-sm-3 col-md-3 border-bottom"><strong>Type</strong></div>
+</div>
+@foreach (var file in Model)
+{
+    <div class="row col-12 person-row">
+        <div class="col-3 col-sm-3 col-md-3 border-bottom">@file.File.Name</div>
+        <div class="col-3 col-sm-3 col-md-3 border-bottom">@file.ContainerName</div>
+        <div class="col-3 col-sm-3 col-md-3 border-bottom">@file.File.Properties.BlobType</div>
+    </div>
+}

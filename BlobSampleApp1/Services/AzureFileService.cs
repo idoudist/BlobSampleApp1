@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BlobSampleApp1.Services
@@ -191,6 +192,26 @@ namespace BlobSampleApp1.Services
                 Console.ReadLine();
                 throw;
             }
+        }
+
+        public async Task<List<FileResponseViewModel>> BlobListByContainersAsync(List<string> containers)
+        {
+            if (containers.Count == 0)
+            {
+                List<SelectListItem> containerSelectList = await ContainerSelectList();
+                containers = containerSelectList.Select(x => x.Value).ToList();
+            }
+            // List all the blobs
+            List<FileResponseViewModel> blobs = new List<FileResponseViewModel>();
+            foreach (string containerName in containers )
+            {
+                BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
+                await foreach (BlobItem blob in container.GetBlobsAsync())
+                {
+                    blobs.Add(new FileResponseViewModel(blob, containerName));
+                }
+            }
+            return blobs;
         }
         #endregion
 

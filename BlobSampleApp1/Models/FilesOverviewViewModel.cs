@@ -1,18 +1,18 @@
-﻿using Azure.Storage.Blobs.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace BlobSampleApp1.Models
 {
     public class FilesOverviewViewModel
     {
-        public IList<SelectListItem> containers { get; set; }
+        public IList<SelectListItem> Containers { get; set; }
 
-        public List<BlobItem> files { get; set; }
+        public List<FileResponseViewModel> Files { get; set; }
 
         public FilesOverviewViewModel()
         {
-            containers = new List<SelectListItem>();
+            Containers = new List<SelectListItem>();
+            Files = new List<FileResponseViewModel>();
         }
     }
 }

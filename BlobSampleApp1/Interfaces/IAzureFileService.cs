@@ -15,5 +15,6 @@ namespace BlobSampleApp1.Interfaces
         Task UploadFileAsync(UploadFileViewModel fileToUpload);
         Task<List<BlobItem>> BlobListByContainerAsync(string containerName);
         Task<List<SelectListItem>> BlobSelectListByContainerAsync(string containerName);
+        Task<List<FileResponseViewModel>> BlobListByContainersAsync(List<string> containers);
     }
 }

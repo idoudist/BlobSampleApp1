@@ -9,16 +9,16 @@
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <div class="dropdown-filter-results">
-                @foreach (var item in Model.containers)
+                @foreach (var item in Model.Containers)
                 {
                     <label class="dropdown-item filter-item">
                         @if (item.Selected)
                         {
-                            <input type="checkbox" class="tool-type-container" name="Containers[]" value="@item.Value" checked /> @item.Text
+                            <input type="checkbox" class="tool-type-filter" name="Containers[]" value="@item.Value" checked /> @item.Text
                         }
                         else
                         {
-                            <input type="checkbox" class="tool-type-container" name="Containers[]" value="@item.Value" /> @item.Text
+                            <input type="checkbox" class="tool-type-filter" name="Containers[]" value="@item.Value" /> @item.Text
                         }
                     </label>
                 }
@@ -31,4 +31,43 @@
     </div>
 </div>
 
-<div id="filesContainer"></div>
+<div id="filesContainer">
+    @await Html.PartialAsync("~/Views/Home/FilesList.cshtml", Model.Files)
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Prevent closing dropdown for filter items on click
+        $('.filter-item').on('click', function (e) {
+            e.stopPropagation();
+        });
+
+        // Check all checkboxes (filters)
+        $('input.check-all-filter').on('change', function (e) {
+            var checked = this.checked;
+            $(this).parents('.dropdown-menu').find('.filter-item input').each(function () {
+                $(this).prop("checked", checked);
+            });
+
+        });
+    });
+
+    $('input.tool-type-filter').on('change', function () {
+        $.post("/Home/FilesList", createFilterData(), function (data) {
+            let fileContainer = $("#filesContainer");
+            fileContainer.html(data);
+        })
+    });
+
+    // create filter
+    function createFilterData() {
+        let data = {};
+        data.containers = [];
+
+        $('input[name="Containers[]"]:checked').each(function () {
+            data.containers.push($(this).val());
+        });
+
+        return data;
+    }
+</script>

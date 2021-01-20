@@ -6,6 +6,7 @@ using BlobSampleApp1.Models;
 using BlobSampleApp1.Interfaces;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace BlobSampleApp1.Controllers
 {
@@ -80,8 +81,17 @@ namespace BlobSampleApp1.Controllers
         public async Task<IActionResult> FilesListWrapper()
         {
             FilesOverviewViewModel overviewModel = new FilesOverviewViewModel();
-            overviewModel.containers = await _azureFileService.ContainerSelectList();
+            overviewModel.Containers = await _azureFileService.ContainerSelectList();
+            overviewModel.Files = await _azureFileService.BlobListByContainersAsync(overviewModel.Containers.Select(x => x.Value).ToList());
             return View(overviewModel);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> FilesList(FilesFilterViewModel filter)
+        {
+            List<FileResponseViewModel> fileResponse = await _azureFileService.BlobListByContainersAsync(filter.Containers.ToList());
+            return View(fileResponse);
         }
 
         #endregion
