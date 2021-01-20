@@ -1,0 +1,34 @@
+﻿@model BlobSampleApp1.Models.FilesOverviewViewModel
+
+
+<div class="row">
+    <Strong class="col-3">Files</Strong>
+    <div class="dropdown col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 float-right vertical-align">
+        <button class="btn btn-light dropdown-toggle col-12" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Containers
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div class="dropdown-filter-results">
+                @foreach (var item in Model.containers)
+                {
+                    <label class="dropdown-item filter-item">
+                        @if (item.Selected)
+                        {
+                            <input type="checkbox" class="tool-type-container" name="Containers[]" value="@item.Value" checked /> @item.Text
+                        }
+                        else
+                        {
+                            <input type="checkbox" class="tool-type-container" name="Containers[]" value="@item.Value" /> @item.Text
+                        }
+                    </label>
+                }
+            </div>
+            <div class="dropdown-divider"></div>
+            <label class="dropdown-item filter-item mb-0">
+                <input type="checkbox" class="check-all-filter" /> <strong>Select All</strong>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div id="filesContainer"></div>

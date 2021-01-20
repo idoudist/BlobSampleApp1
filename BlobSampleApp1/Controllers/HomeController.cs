@@ -77,6 +77,13 @@ namespace BlobSampleApp1.Controllers
             return View("Index");
         }
 
+        public async Task<IActionResult> FilesListWrapper()
+        {
+            FilesOverviewViewModel overviewModel = new FilesOverviewViewModel();
+            overviewModel.containers = await _azureFileService.ContainerSelectList();
+            return View(overviewModel);
+        }
+
         #endregion
 
 

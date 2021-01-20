@@ -150,6 +150,48 @@ namespace BlobSampleApp1.Services
                 throw;
             }
         }
+
+        public async Task<List<SelectListItem>> BlobSelectListByContainerAsync(string containerName)
+        {
+            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
+            try
+            {
+                // List all the blobs
+                List<SelectListItem> blobs = new List<SelectListItem>();
+                await foreach (BlobItem blob in container.GetBlobsAsync())
+                {
+                    blobs.Add(new SelectListItem(blob.Name, blob.Name));
+                }
+                return blobs;
+            }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadLine();
+                throw;
+            }
+        }
+
+        public async Task<List<BlobItem>> BlobListByContainerAsync(string containerName)
+        {
+            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
+            try
+            {
+                // List all the blobs
+                List<BlobItem> blobs = new List<BlobItem>();
+                await foreach (BlobItem blob in container.GetBlobsAsync())
+                {
+                    blobs.Add(blob);
+                }
+                return blobs;
+            }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadLine();
+                throw;
+            }
+        }
         #endregion
 
     }
