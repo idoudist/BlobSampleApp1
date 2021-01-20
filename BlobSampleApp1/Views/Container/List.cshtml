@@ -1,9 +1,14 @@
 ﻿@model List<BlobSampleApp1.Models.ContainerInfoViewModel>
 
 <strong class="ml-2">Containers</strong>
-<ul>
+
     @foreach (var container in Model)
-    {
-        <li><label>@container.Name</label></li>
+    {<div class="row">
+         <div class="col-6">
+             <label>@container.Name</label>
+         </div>
+         <div class="col-6">
+             <button id="@container.Name-container">x</button>
+         </div>
+    </div>        
     }
-</ul>

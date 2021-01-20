@@ -94,6 +94,23 @@ namespace BlobSampleApp1.Services
             }
         }
 
+        public async Task DeleteContainerAsync(string containerName)
+        {
+            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
+
+            try
+            {
+                // Delete the specified container and handle the exception.
+                await container.DeleteAsync();
+            }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine("HTTP error code {0}: {1}",
+                                    e.Status, e.ErrorCode);
+                Console.WriteLine(e.Message);
+                Console.ReadLine();
+            }
+        }
         #endregion
     }
 }
