@@ -1,0 +1,29 @@
+﻿@model List<BlobSampleApp1.Models.ContainerInfoViewModel>
+@{
+    string newContainerPath = "/Container/Details";
+}
+<div class="card mb-4">
+    <div class="card-header container-fluid">
+        <div class="row">
+            <div class="col-md-10">
+                <em class="fas fa-table mr-1"></em>
+                Containers
+            </div>
+            <div class="col-md-2 float-right" style="text-align: right;">
+                <button type="button" class="btn create-button" onclick="window.location.href='@newContainerPath'">New</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mb-2">
+        <div class="card-content">
+            <div class="card-body">
+                <!--Wrapper-->
+                <div id="containerContainer">
+                    @await Html.PartialAsync("~/Views/Container/List.cshtml", Model)
+                </div>
+                <!--Wrapper-->
+            </div>
+        </div>
+    </div>
+</div>

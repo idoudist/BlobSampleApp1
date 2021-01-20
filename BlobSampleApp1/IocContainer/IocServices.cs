@@ -15,6 +15,7 @@ namespace BlobSampleApp1.IocContainer
         {
             services.AddTransient<IAzureFileService, AzureFileService>();
             services.AddTransient<IMockupServices, MockupServices>();
+            services.AddTransient<IContainerService, ContainerService>();
         }
     }
 }

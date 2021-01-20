@@ -32,25 +32,6 @@ namespace BlobSampleApp1.Controllers
             return View();
         }
 
-        #region container
-        public IActionResult ContainerDetails()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> UpdateContainer(ContainerCreateViewModel container)
-        {
-            await _azureFileService.CreateContainer(container.Name);
-            return View("Index");
-        }
-
-        public async Task<IActionResult> ContainersList()
-        {
-            List<ContainerInfoViewModel> containers = await _azureFileService.ContainerList();
-            return View("ContainerList", containers);
-        }
-        #endregion
-
         #region files
 
         public async Task<IActionResult> FileDetails()
