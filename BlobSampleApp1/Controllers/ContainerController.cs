@@ -13,11 +13,13 @@ namespace BlobSampleApp1.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IContainerService _containerService;
+        private readonly IMockupServices _mockupService;
 
-        public ContainerController(ILogger<HomeController> logger, IContainerService containerService)
+        public ContainerController(ILogger<HomeController> logger, IContainerService containerService, IMockupServices mockupService)
         {
             _logger = logger;
             _containerService = containerService;
+            _mockupService = mockupService;
         }
         public async Task<IActionResult> Index()
         {

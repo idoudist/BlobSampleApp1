@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs.Specialized;
 using BlobSampleApp1.Interfaces;
 using BlobSampleApp1.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -110,6 +111,59 @@ namespace BlobSampleApp1.Services
                 Console.WriteLine(e.Message);
                 Console.ReadLine();
             }
+        }
+
+        public async Task<BlobContainerInfo> CloneContainer(string sourceContainerName , string targetContainerName)
+        {
+            try
+            {
+                // create target container
+                BlobContainerClient targetContainerClient = new BlobContainerClient(connectionString, targetContainerName);
+                BlobContainerInfo targetContainer = await targetContainerClient.CreateAsync();
+                // get source container
+                BlobContainerClient sourceContainerClient = blobServiceClient.GetBlobContainerClient(sourceContainerName);
+                // blobs from source container
+                await foreach (BlobItem blob in sourceContainerClient.GetBlobsAsync())
+                {
+                    // create a blob client for the source blob
+                    BlobClient sourceBlob = sourceContainerClient.GetBlobClient(blob.Name);
+                    // Ensure that the source blob exists.
+                    if (await sourceBlob.ExistsAsync())
+                    {
+                        // Lease the source blob for the copy operation 
+                        // to prevent another client from modifying it.
+                        BlobLeaseClient lease = sourceBlob.GetBlobLeaseClient();
+
+                        // Specifying -1 for the lease interval creates an infinite lease.
+                        await lease.AcquireAsync(TimeSpan.FromSeconds(-1));
+
+                        // Get a BlobClient representing the destination blob with a unique name.
+                        BlobClient destBlob = targetContainerClient.GetBlobClient(sourceBlob.Name);
+
+                        // Start the copy operation.
+                        await destBlob.StartCopyFromUriAsync(sourceBlob.Uri);
+
+                        // Update the source blob's properties.
+                        BlobProperties sourceProperties = await sourceBlob.GetPropertiesAsync();
+
+                        if (sourceProperties.LeaseState == LeaseState.Leased)
+                        {
+                            // Break the lease on the source blob.
+                            await lease.BreakAsync();
+                        }
+                    }
+                }
+
+                
+                return targetContainer;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadLine();
+                throw;
+            }
+
         }
         #endregion
     }
