@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to Blob Management Portal</h1>
+</div>
+
+<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+    <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item">
+            <a class="nav-link text-dark " asp-area="" asp-controller="Home" asp-action="ContainerDetails">Add a container</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark " asp-area="" asp-controller="Home" asp-action="ContainersList">Containers List</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark " asp-area="" asp-controller="Home" asp-action="FileDetails">Upload a file</a>
+        </li>
+    </ul>
+</div>

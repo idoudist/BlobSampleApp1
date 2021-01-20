@@ -1,0 +1,15 @@
+﻿@model List<BlobSampleApp1.Models.ContainerInfoViewModel>
+@{
+
+}
+
+<div>
+    <strong class="ml-2">Containers</strong>
+    <ul>
+
+        @foreach (var container in Model)
+        {
+            <li><label>@container.Name</label></li>
+        }
+    </ul>
+</div>
