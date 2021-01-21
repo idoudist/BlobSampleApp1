@@ -17,4 +17,8 @@
     <ProjectReference Include="..\BlobSampleApp1\BlobSampleApp1.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Utils\" />
+  </ItemGroup>
+
 </Project>

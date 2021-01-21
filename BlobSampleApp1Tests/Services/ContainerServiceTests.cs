@@ -3,55 +3,54 @@ using BlobSampleApp1.Interfaces;
 using Azure.Storage.Blobs.Models;
 using System.Threading.Tasks;
 using BlobSampleApp1.Utils;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
+using BlobSampleApp1Tests.Config;
+using Azure.Storage.Blobs;
+using System.IO;
 
 namespace BlobSampleApp1.Services.Tests
 {
     [TestClass()]
-    public class ContainerServiceTests
+    public class ContainerServiceTests : UnitTestManager
     {
-        private readonly IContainerService _containerService;
-        private readonly IMockupServices _mockupService;
-        private IConfiguration _config;
-
-        public ContainerServiceTests()
-        {
-            IServiceCollection services = new ServiceCollection();
-
-            services.AddSingleton<IConfiguration>(Configuration);
-
-            _mockupService = new MockupServices();
-            _containerService = new ContainerService(_config, _mockupService);
-        }
-
-        public IConfiguration Configuration
-        {
-            get
-            {
-                if (_config == null)
-                {
-                    var provider = new PhysicalFileProvider("/Config");
-                    var builder = new ConfigurationBuilder().AddJsonFile(provider, $"testsettings.json", optional: false , false);
-                    _config = builder.Build();
-                }
-
-                return _config;
-            }
-        }
-
-        public ContainerServiceTests(IContainerService containerService, IMockupServices mockupService)
-        {
-            _containerService = containerService;
-            _mockupService = mockupService;
-        }
+        
 
         [TestMethod()]
         public async Task CloneContainerTest()
         {
-            var response = await _containerService.CloneContainer("fadi", _mockupService.Randomize(AppConstant.SAMPLE_CONTAINER_NAME));
-            Assert.IsTrue(response != null);
+            //destination container name 
+            string destinationContainerName = _mockupService.Randomize(AppConstant.SAMPLE_CONTAINER_NAME);
+            // Create a temporary Lorem Ipsum file on disk that we can upload
+            string path = _mockupService.CreateTempFile();
+
+            // Get a reference to a container named "sample-container" and then create it
+            BlobContainerClient container = new BlobContainerClient(connectionString, _mockupService.Randomize(AppConstant.SAMPLE_CONTAINER_NAME));
+            await container.CreateAsync();
+            try
+            {
+                // Get a reference to a blob
+                BlobClient blob = container.GetBlobClient(_mockupService.Randomize(AppConstant.SAMPLE_FILE_NAME));
+
+                // Open the file and upload its data
+                using (FileStream file = File.OpenRead(path))
+                {
+                    await blob.UploadAsync(file);
+                }
+
+
+                //test operation
+                var response = await _containerService.CloneContainer(container.Name, destinationContainerName);
+
+                Assert.IsTrue(response != null);
+
+            }
+            finally
+            {
+                // delete file and container after compleating operation
+                await container.DeleteAsync();
+                //// delete destination container
+                await _containerService.DeleteContainerAsync(destinationContainerName);
+            }
+
         }
     }
 }

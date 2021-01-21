@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BlobSampleApp1.Interfaces;
 using BlobSampleApp1.Models;
-using BlobSampleApp1.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -36,7 +33,6 @@ namespace BlobSampleApp1.Controllers
         public async Task<IActionResult> Update(ContainerCreateViewModel container)
         {
             await _containerService.CreateContainer(container.Name);
-            await _containerService.CloneContainer("fadi", _mockupService.Randomize(AppConstant.SAMPLE_CONTAINER_NAME));
             return RedirectToAction("Index");
         }
 
