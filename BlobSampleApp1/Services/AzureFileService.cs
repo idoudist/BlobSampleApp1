@@ -150,7 +150,7 @@ namespace BlobSampleApp1.Services
             }
             // List all the blobs
             List<FileResponseViewModel> blobs = new List<FileResponseViewModel>();
-            foreach (string containerName in containers )
+            foreach (string containerName in containers)
             {
                 BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
                 await foreach (BlobItem blob in container.GetBlobsAsync())
@@ -175,6 +175,38 @@ namespace BlobSampleApp1.Services
                 throw;
             }
         }
+
+        public async Task<BlobDownloadInfo> DownloadAsync(string fileName, string containerName, string downloadPath)
+        {
+            try
+            {
+                // Get Container client
+                BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
+                // Get Blob Client
+                BlobClient blob = container.GetBlobClient(fileName);
+                // Download the blob's contents and save it to a file
+                BlobDownloadInfo download = await blob.DownloadAsync();
+                using (FileStream file = File.OpenWrite(downloadPath))
+                {
+                    await download.Content.CopyToAsync(file);
+                }
+
+                return download;
+            }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine("HTTP error code {0}: {1}",
+                                    e.Status, e.ErrorCode);
+                Console.WriteLine(e.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
         #endregion
 
     }

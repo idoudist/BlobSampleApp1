@@ -14,5 +14,6 @@ namespace BlobSampleApp1.Interfaces
         Task<List<SelectListItem>> BlobSelectListByContainerAsync(string containerName);
         Task<List<FileResponseViewModel>> BlobListByContainersAsync(List<string> containers);
         Task DeleteFile(string fileName, string containerName);
+        Task<BlobDownloadInfo> DownloadAsync(string fileName, string containerName, string downloadPath);
     }
 }
