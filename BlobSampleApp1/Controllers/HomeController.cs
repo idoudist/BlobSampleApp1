@@ -14,11 +14,13 @@ namespace BlobSampleApp1.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IAzureFileService _azureFileService;
+        private readonly IContainerService _containerService;
 
-        public HomeController(ILogger<HomeController> logger, IAzureFileService azureFileService)
+        public HomeController(ILogger<HomeController> logger, IAzureFileService azureFileService, IContainerService containerService)
         {
             _logger = logger;
             _azureFileService = azureFileService;
+            _containerService = containerService;
         }
 
         public IActionResult Index()
@@ -37,7 +39,7 @@ namespace BlobSampleApp1.Controllers
         public async Task<IActionResult> FileDetails()
         {
             UploadFileViewModel file = new UploadFileViewModel();
-            file.ContainerSelectList = await _azureFileService.ContainerSelectList();
+            file.ContainerSelectList = await _containerService.ContainerSelectList();
             return View(file);
         }
 
@@ -62,7 +64,7 @@ namespace BlobSampleApp1.Controllers
         public async Task<IActionResult> FilesListWrapper()
         {
             FilesOverviewViewModel overviewModel = new FilesOverviewViewModel();
-            overviewModel.Containers = await _azureFileService.ContainerSelectList();
+            overviewModel.Containers = await _containerService.ContainerSelectList();
             overviewModel.Files = await _azureFileService.BlobListByContainersAsync(overviewModel.Containers.Select(x => x.Value).ToList());
             return View(overviewModel);
         }

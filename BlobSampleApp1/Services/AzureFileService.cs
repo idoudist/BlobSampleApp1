@@ -67,43 +67,8 @@ namespace BlobSampleApp1.Services
         #endregion
 
         #region container_methods
-        public async Task<BlobContainerInfo> CreateContainer(string containerName)
-        {
-            BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
-            BlobContainerInfo containerInfo = await container.CreateAsync();
-            return containerInfo;
-        }
 
-        public async Task<List<ContainerInfoViewModel>> ContainerList()
-        {
-            try
-            {
-                List<ContainerInfoViewModel> containers = new List<ContainerInfoViewModel>();
-                var resultSegment = blobServiceClient.GetBlobContainersAsync().AsPages();
-                await foreach (Azure.Page<BlobContainerItem> containerPage in resultSegment)
-                {
-                    foreach (BlobContainerItem containerItem in containerPage.Values)
-                    {
-                        ContainerInfoViewModel newContainer = new ContainerInfoViewModel()
-                        {
-                            Name = containerItem.Name,
-                            Properties = containerItem.Properties
-                        };
-                        containers.Add(newContainer);
-                    }
-                    
-                }
-                return containers;
-            } 
-            catch (RequestFailedException e)
-            {
-                Console.WriteLine(e.Message);
-                Console.ReadLine();
-                throw;
-            }
-        }
-
-        public async Task<List<SelectListItem>> ContainerSelectList()
+        private async Task<List<SelectListItem>> ContainerSelectList()
         {
             try
             {
@@ -126,7 +91,9 @@ namespace BlobSampleApp1.Services
                 throw;
             }
         }
+        #endregion
 
+        #region file methods
         public async Task UploadFileAsync(UploadFileViewModel fileToUpload)
         {
             BlobContainerClient container = blobServiceClient.GetBlobContainerClient(fileToUpload.SelectedContainer);

@@ -9,9 +9,6 @@ namespace BlobSampleApp1.Interfaces
     public interface IAzureFileService
     {
         Task UploadAsync();
-        Task<BlobContainerInfo> CreateContainer(string containerName);
-        Task<List<ContainerInfoViewModel>> ContainerList();
-        Task<List<SelectListItem>> ContainerSelectList();
         Task UploadFileAsync(UploadFileViewModel fileToUpload);
         Task<List<BlobItem>> BlobListByContainerAsync(string containerName);
         Task<List<SelectListItem>> BlobSelectListByContainerAsync(string containerName);
