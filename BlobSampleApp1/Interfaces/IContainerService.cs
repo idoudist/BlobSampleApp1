@@ -8,10 +8,11 @@ namespace BlobSampleApp1.Interfaces
 {
     public interface IContainerService
     {
-        Task<BlobContainerInfo> CreateContainer(string containerName);
+        Task<BlobContainerInfo> CreateContainer(string containerName, PublicAccessType publicAccessType = PublicAccessType.None);
         Task<List<ContainerInfoViewModel>> ContainerList();
         Task<List<SelectListItem>> ContainerSelectList();
         Task DeleteContainerAsync(string containerName);
         Task<BlobContainerInfo> CloneContainer(string sourceContainerName, string targetContainerName);
+        Task ChangeContainerPermission(string containerName, PublicAccessType publicAccessType = PublicAccessType.None);
     }
 }

@@ -34,12 +34,13 @@ namespace BlobSampleApp1.Services
 
         #region Methods
 
-        public async Task<BlobContainerInfo> CreateContainer(string containerName)
+        public async Task<BlobContainerInfo> CreateContainer(string containerName, PublicAccessType publicAccessType = PublicAccessType.None)
         {
             BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
-            BlobContainerInfo containerInfo = await container.CreateAsync();
+            BlobContainerInfo containerInfo = await container.CreateAsync(publicAccessType);
             return containerInfo;
         }
+
 
         public async Task<List<ContainerInfoViewModel>> ContainerList()
         {
@@ -163,6 +164,12 @@ namespace BlobSampleApp1.Services
                 throw;
             }
 
+        }
+
+        public async Task ChangeContainerPermission(string containerName, PublicAccessType publicAccessType = PublicAccessType.None)
+        {
+            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
+            await container.SetAccessPolicyAsync(publicAccessType);
         }
         #endregion
     }
