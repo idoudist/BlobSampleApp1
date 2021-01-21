@@ -12,6 +12,7 @@ namespace BlobSampleApp1Tests.Config
     {
         #region service
         protected readonly IContainerService _containerService;
+        protected readonly IAzureFileService _azureFileService;
         protected readonly IMockupServices _mockupService;
         protected IConfiguration _config;
         protected readonly BlobServiceClient blobServiceClient;
@@ -29,6 +30,7 @@ namespace BlobSampleApp1Tests.Config
 
             _mockupService = new MockupServices();
             _containerService = new ContainerService(_config, _mockupService);
+            _azureFileService = new AzureFileService(_config, _mockupService);
             connectionString = _config["storageconnectionstring"];
         }
 

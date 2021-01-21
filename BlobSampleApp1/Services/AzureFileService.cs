@@ -1,6 +1,8 @@
 ﻿using Azure;
+using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs.Specialized;
 using BlobSampleApp1.Interfaces;
 using BlobSampleApp1.Models;
 using BlobSampleApp1.Utils;
@@ -64,33 +66,6 @@ namespace BlobSampleApp1.Services
             }
         }
 
-        #endregion
-
-        #region container_methods
-
-        private async Task<List<SelectListItem>> ContainerSelectList()
-        {
-            try
-            {
-                List<SelectListItem> containers = new List<SelectListItem>();
-                var resultSegment = blobServiceClient.GetBlobContainersAsync().AsPages();
-                await foreach (Azure.Page<BlobContainerItem> containerPage in resultSegment)
-                {
-                    foreach (BlobContainerItem containerItem in containerPage.Values)
-                    {
-                        containers.Add(new SelectListItem(containerItem.Name, containerItem.Name));
-                    }
-
-                }
-                return containers;
-            }
-            catch (RequestFailedException e)
-            {
-                Console.WriteLine(e.Message);
-                Console.ReadLine();
-                throw;
-            }
-        }
         #endregion
 
         #region file methods
@@ -165,8 +140,15 @@ namespace BlobSampleApp1.Services
         {
             if (containers.Count == 0)
             {
-                List<SelectListItem> containerSelectList = await ContainerSelectList();
-                containers = containerSelectList.Select(x => x.Value).ToList();
+                var resultSegment = blobServiceClient.GetBlobContainersAsync().AsPages();
+                await foreach (Azure.Page<BlobContainerItem> containerPage in resultSegment)
+                {
+                    foreach (BlobContainerItem containerItem in containerPage.Values)
+                    {
+                        containers.Add(containerItem.Name);
+                    }
+
+                }
             }
             // List all the blobs
             List<FileResponseViewModel> blobs = new List<FileResponseViewModel>();
@@ -179,6 +161,21 @@ namespace BlobSampleApp1.Services
                 }
             }
             return blobs;
+        }
+
+        public async Task DeleteFile(string fileName, string containerName)
+        {
+            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
+            try
+            {
+                await container.DeleteBlobAsync(fileName);
+            }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadLine();
+                throw;
+            }
         }
         #endregion
 
