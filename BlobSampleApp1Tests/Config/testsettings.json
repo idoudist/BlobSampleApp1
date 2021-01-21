@@ -1,0 +1,14 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "tenhoveConnection": "Server=localhost\\SQLEXPRESS;Initial Catalog=SampleBlob;Persist Security Info=False;Integrated Security=true;MultipleActiveResultSets=False;Encrypt=false;TrustServerCertificate=true;Connection Timeout=30"
+  },
+  "storageconnectionstring": "UseDevelopmentStorage=true"
+}

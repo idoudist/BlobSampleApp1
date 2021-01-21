@@ -135,7 +135,7 @@ namespace BlobSampleApp1.Services
                         BlobLeaseClient lease = sourceBlob.GetBlobLeaseClient();
 
                         // Specifying -1 for the lease interval creates an infinite lease.
-                        await lease.AcquireAsync(TimeSpan.FromSeconds(-1));
+                        await lease.AcquireAsync(TimeSpan.FromSeconds(60));
 
                         // Get a BlobClient representing the destination blob with a unique name.
                         BlobClient destBlob = targetContainerClient.GetBlobClient(sourceBlob.Name);
