@@ -36,9 +36,24 @@ namespace BlobSampleApp1.Services
 
         public async Task<BlobContainerInfo> CreateContainer(string containerName, PublicAccessType publicAccessType = PublicAccessType.None)
         {
-            BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
-            BlobContainerInfo containerInfo = await container.CreateAsync(publicAccessType);
-            return containerInfo;
+            try
+            {
+                BlobContainerClient container = new BlobContainerClient(connectionString, containerName);
+                BlobContainerInfo containerInfo = await container.CreateAsync(publicAccessType);
+                return containerInfo;
+            }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadLine();
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+
         }
 
 
@@ -69,6 +84,11 @@ namespace BlobSampleApp1.Services
                 Console.ReadLine();
                 throw;
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public async Task<List<SelectListItem>> ContainerSelectList()
@@ -93,6 +113,11 @@ namespace BlobSampleApp1.Services
                 Console.ReadLine();
                 throw;
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         public async Task DeleteContainerAsync(string containerName)
@@ -109,7 +134,12 @@ namespace BlobSampleApp1.Services
                 Console.WriteLine("HTTP error code {0}: {1}",
                                     e.Status, e.ErrorCode);
                 Console.WriteLine(e.Message);
-                Console.ReadLine();
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
             }
         }
 
@@ -157,10 +187,16 @@ namespace BlobSampleApp1.Services
                 
                 return targetContainer;
             }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine("HTTP error code {0}: {1}",
+                                    e.Status, e.ErrorCode);
+                Console.WriteLine(e.Message);
+                throw;
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Console.ReadLine();
                 throw;
             }
 
@@ -168,8 +204,23 @@ namespace BlobSampleApp1.Services
 
         public async Task ChangeContainerPermission(string containerName, PublicAccessType publicAccessType = PublicAccessType.None)
         {
-            BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
-            await container.SetAccessPolicyAsync(publicAccessType);
+            try
+            {
+                BlobContainerClient container = blobServiceClient.GetBlobContainerClient(containerName);
+                await container.SetAccessPolicyAsync(publicAccessType);
+            }
+            catch (RequestFailedException e)
+            {
+                Console.WriteLine("HTTP error code {0}: {1}",
+                                    e.Status, e.ErrorCode);
+                Console.WriteLine(e.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
         #endregion
     }
